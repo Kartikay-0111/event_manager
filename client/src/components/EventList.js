@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { deleteEvent } from '../api';
+import config from '../config';
+import { useCallback } from 'react';
+
 const EventList = () => {
   const [events, setEvents] = useState([]);
   const [filters, setFilters] = useState({
@@ -15,29 +18,29 @@ const EventList = () => {
   });
   const [locations, setLocations] = useState([]);
 
-  useEffect(() => {
-    fetchEvents();
-    fetchLocations();
-  }, [filters, sortConfig]);
-
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
       const queryParams = new URLSearchParams({
         ...filters,
         sortBy: sortConfig.field,
         sortOrder: sortConfig.direction
       });
-      const response = await fetch(`http://localhost:5000/api/events?${queryParams}`);
+      const response = await fetch(`${config.baseURL}/events?${queryParams}`);
       const data = await response.json();
       setEvents(data);
     } catch (error) {
       console.error('Error fetching events:', error);
     }
-  };
+  }, [filters, sortConfig]);
+
+  useEffect(() => {
+    fetchEvents();
+    fetchLocations();
+  }, [filters, sortConfig, fetchEvents]);
 
   const fetchLocations = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/locations');
+      const response = await fetch(`${config.baseURL}/events/locations`);
       const data = await response.json();
       setLocations(data);
     } catch (error) {
@@ -45,10 +48,11 @@ const EventList = () => {
     }
   };
 
-  const handleDeleteEvent = async (id) => {
-    deleteEvent(id);
+  const handleDeleteEvent = async (id, e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    await deleteEvent(id);
     fetchEvents();
-
   };
 
   const handleFilterChange = (field, value) => {
@@ -199,7 +203,7 @@ const EventList = () => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.location.href = `/edit/${event.id}`;
+                  window.location.href = `/update/${event.id}`;
                 }}
                 className="text-green-500 hover:underline"
               >
@@ -207,10 +211,7 @@ const EventList = () => {
               </button>
               
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteEvent(event.id);
-                }}
+                onClick={(e) => handleDeleteEvent(event.id, e)}
                 className="text-red-500 hover:underline"
               >
                 Delete

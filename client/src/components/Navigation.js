@@ -15,6 +15,9 @@ const Navigation = () => {
             <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
               <a href='/create'>Create Event</a>
             </button>
+            <button className="text-gray-600 hover:text-gray-800">
+              <a href='/stats'>Event Stats</a>
+            </button>
           </div>
           <div className="md:hidden">
             <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-gray-800 focus:outline-none">
@@ -32,6 +35,9 @@ const Navigation = () => {
           </button>
           <button className="block bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mt-2">
             <a href='/create'>Create Event</a>
+          </button>
+          <button className="block text-gray-600 hover:text-gray-800 py-2">
+            <a href='/stats'>Event Stats</a>
           </button>
         </div>
       )}

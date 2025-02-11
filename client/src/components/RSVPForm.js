@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import config from '../config';
 
 const RSVPForm = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const eventId = Number(window.location.pathname.split('/').pop());
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://localhost:5000/api/rsvps', {
+        setLoading(true);
+        const response = await fetch(`${config.baseURL}/rsvps`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,10 +21,13 @@ const RSVPForm = () => {
             alert('RSVP submitted successfully!');
             setName('');
             setEmail('');
+            setLoading(false);
         } else {
             alert('Failed to submit RSVP.');
+            setLoading(false);
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white p-8 shadow-md rounded-lg">
@@ -45,8 +52,8 @@ const RSVPForm = () => {
                     required
                 />
             </div>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                Submit
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" disabled={loading}>
+                {loading ? 'Submitting...' : 'Submit'}
             </button>
         </form>
     );

@@ -6,6 +6,7 @@ import EventList from './components/EventList';
 import EventCard from './components/EventCard';
 import { fetchEvents } from './api';
 import RSVPForm from './components/RSVPForm';
+import EventStats from './components/EventStats';
 
 const App = () => {
   const [events, setEvents] = useState([]);
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/update/:id" element={<CreateOrUpdateEventForm update={true} />} />
           <Route path="/details/:id" element={<EventCard events={events} />} />
           <Route path="/rsvp/:id" element={<RSVPForm/>} />
+          <Route path="/stats" element={<EventStats />} />
         </Route>
       </>
     )
